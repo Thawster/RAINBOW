@@ -1,0 +1,140 @@
+checklist = list()
+
+# CREATE
+def create(item):
+    checklist.append(item)
+    # Create item code here
+
+# READ
+def read(index):
+    return checklist[index]
+    # Read code here
+
+# UPDATE
+def update(index, item):
+    try:
+        checklist[index] = item
+    except:
+        create(item)
+    # Update code here
+
+# DESTROY
+def destroy(index):
+    try:
+        checklist.pop(index)
+    except:
+        None
+    # Destroy code here
+
+def list_all_items():
+    index = 0
+    for list_item in checklist:
+        print(str(index) + " " + list_item)
+        index += 1
+
+def mark_completed(index):
+    try:
+        update(index, (checklist[index] + " √"))
+    except:
+        None
+
+def mark_incomplete(index):
+    try:
+        update(index, checklist[index].replace(" √", ""))
+    except:
+        None
+
+def select(function_code):
+    # Create item
+    if function_code == "C":
+        input_item = user_input("Input item:")
+        create(input_item)
+
+    # Read item
+    elif function_code == "R":
+        num = False;
+        while not num:
+            item_index = user_input("Index Number of item to delete? Press X to cancel")
+
+            # Remember that item_index must actually exist or our program will crash.
+            if item_index.isdigit():
+                destroy(int(item_index))
+                num = True
+            elif item_index == "X":
+                num = True
+            else:
+                num = False
+
+    # Print all items
+    elif function_code == "P":
+        list_all_items()
+    elif function_code == "M":
+        mark = False
+        while not mark:
+            item_index = user_input("Index Number of item to mark? Press X to cancel")
+            if item_index.isdigit():
+                mark_completed(int(item_index))
+                mark = True
+            elif item_index == "X":
+                return True
+    elif function_code == "I":
+        unmark = False
+        while not unmark:
+            item_index = user_input("Index Number of item to unmark? Press X to cancel")
+            if item_index.isdigit():
+                mark_incomplete(int(item_index))
+                unmark = True
+            elif item_index == "X":
+                return True
+    elif function_code == "U":
+        changed = False
+        while not changed:
+            item_index = user_input("Index Number of item to change? Press X to cancel")
+            # Remember that item_index must actually exist or our program will crash.
+            if item_index.isdigit():
+                item_index = int(item_index)
+                changed = True
+            elif item_index == "X":
+                return True
+        new = False
+        while not new:
+            input_item = user_input("New item? Press X to cancel")
+            if input_item == "X":
+                return True
+            else:
+                new = True
+        update(item_index, input_item)
+
+
+    elif function_code == "Q":
+        # This is where we want to stop our loop
+        return False
+    else:
+        #Catch all
+        print("Unknown Option")
+    return True
+    # Catch all
+
+def user_input(prompt):
+    # the input function will display a message in the terminal
+    # and wait for user input.
+    user_input = input(prompt)
+    return user_input
+
+
+def test():
+    create("purple sox")
+    create("red cloak")
+    print(read(0))
+    print(read(1))
+    update(0, "purple socks")
+    destroy(1)
+    print(read(0))
+
+    list_all_items()
+
+running = True
+while running:
+    selection = user_input(
+        "Press C to add to list, R to Remove from list, U to change a value in the list, M to mark complete, I to unmark complete, P to display list, and Q to exit").upper()
+    running = select(selection)
